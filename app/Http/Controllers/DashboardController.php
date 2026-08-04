@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Room;
+use App\Models\Borrowing;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->isAdmin()) {
-            return view('admin.dashboard');
-        }
+        $totalRoom = Room::count();
+        $totalBorrowing = Borrowing::count();
+        $waiting = Borrowing::where('status', 'Menunggu')->count();
+        $approved = Borrowing::where('status', 'Disetujui')->count();
+        $rejected = Borrowing::where('status', 'Ditolak')->count();
+        $finished = Borrowing::where('status', 'Selesai')->count();
 
-        return view('dosen.dashboard');
+        return view('dashboard', compact(
+            'totalRoom',
+            'totalBorrowing',
+            'waiting',
+            'approved',
+            'rejected',
+            'finished'
+        ));
     }
 }

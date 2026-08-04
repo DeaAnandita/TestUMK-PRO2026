@@ -20,12 +20,32 @@
                     </p>
                 </div>
 
-                <a href="{{ route('rooms.create') }}"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+                <div class="flex gap-3">
 
-                    + Tambah Ruangan
+                    <form
+                        action="{{ route('rooms.sync') }}"
+                        method="POST">
 
-                </a>
+                        @csrf
+
+                        <button
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+
+                            Sinkronisasi
+
+                        </button>
+
+                    </form>
+
+                    <a
+                        href="{{ route('rooms.create') }}"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+
+                        Tambah Ruangan
+
+                    </a>
+
+                </div>
 
             </div>
 

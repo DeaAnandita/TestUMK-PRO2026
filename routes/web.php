@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\SyncRoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,13 +70,21 @@ Route::middleware(['auth','admin'])->group(function () {
 
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    Route::post('/rooms/sync', [SyncRoomController::class, 'sync'])
+        ->name('rooms.sync');
+
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
