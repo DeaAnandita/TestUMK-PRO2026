@@ -53,15 +53,128 @@
 
                 <form method="GET" class="mb-5">
 
-                    <input
-                        type="text"
-                        name="search"
-                        value="{{ request('search') }}"
-                        placeholder="Cari kode, nama, gedung..."
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-                        class="w-full md:w-96 border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200">
 
-                </form>
+                    {{-- Search --}}
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            Pencarian
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Kode, nama, gedung..."
+                            class="mt-1 w-full border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200">
+
+                    </div>
+
+
+
+                    {{-- Filter Gedung --}}
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            Gedung
+                        </label>
+
+                        <select
+                            name="gedung"
+                            class="mt-1 w-full border rounded-lg px-4 py-2">
+
+                            <option value="">
+                                Semua Gedung
+                            </option>
+
+
+                            @foreach($gedungs as $gedung)
+
+                                <option value="{{ $gedung }}"
+                                {{ request('gedung') == $gedung ? 'selected':'' }}>
+
+                                    {{ $gedung }}
+
+                                </option>
+
+                            @endforeach
+
+
+                        </select>
+
+                    </div>
+
+
+
+
+                    {{-- Filter Status --}}
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            Status
+                        </label>
+
+
+                        <select
+                            name="status"
+                            class="mt-1 w-full border rounded-lg px-4 py-2">
+
+
+                            <option value="">
+                                Semua Status
+                            </option>
+
+
+                            <option value="1"
+                            {{ request('status') == '1' ? 'selected':'' }}>
+                                Aktif
+                            </option>
+
+
+                            <option value="0"
+                            {{ request('status') == '0' ? 'selected':'' }}>
+                                Tidak Aktif
+                            </option>
+
+
+                        </select>
+
+
+                    </div>
+
+
+
+
+                    {{-- Button --}}
+                    <div class="flex items-end gap-2">
+
+
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+
+                            🔍 Cari
+
+                        </button>
+
+
+
+                        <a href="{{ route('rooms.index') }}"
+                        class="bg-gray-200 hover:bg-gray-300 px-5 py-2 rounded-lg">
+
+                            Reset
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </form>
 
                 <div class="overflow-x-auto">
 

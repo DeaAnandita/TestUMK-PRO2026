@@ -9,12 +9,44 @@ use App\Http\Requests\StoreBorrowingRequest;
 
 class BorrowingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $borrowings = Borrowing::with('room')
-            ->where('user_id', auth()->id())
+        $query = Borrowing::with(['room','user']);
+
+
+        // Pencarian nama ruang
+        if ($request->search) {
+
+            $query->whereHas('room', function($q) use ($request){
+
+                $q->where('nama_ruang','like','%'.$request->search.'%');
+
+            });
+
+        }
+
+
+        // Filter status
+        if ($request->status) {
+
+            $query->where('status',$request->status);
+
+        }
+
+
+        // Filter tanggal
+        if ($request->tanggal) {
+
+            $query->where('tanggal',$request->tanggal);
+
+        }
+
+
+        $borrowings = $query
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
+
 
         return view('borrowings.index', compact('borrowings'));
     }

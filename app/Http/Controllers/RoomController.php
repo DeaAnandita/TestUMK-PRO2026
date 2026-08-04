@@ -13,16 +13,55 @@ class RoomController extends Controller
     {
         $search = $request->search;
 
-        $rooms = Room::when($search, function ($query) use ($search) {
-            $query->where('kode_ruang', 'like', "%$search%")
-                ->orWhere('nama_ruang', 'like', "%$search%")
-                ->orWhere('gedung', 'like', "%$search%");
-        })
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
 
-        return view('rooms.index', compact('rooms', 'search'));
+        $rooms = Room::when($search, function ($query) use ($search) {
+
+                $query->where(function($q) use ($search){
+
+                    $q->where('kode_ruang', 'like', "%$search%")
+                    ->orWhere('nama_ruang', 'like', "%$search%")
+                    ->orWhere('gedung', 'like', "%$search%")
+                    ->orWhere('fasilitas', 'like', "%$search%");
+
+                });
+
+            })
+
+
+            // Filter Gedung
+            ->when($request->gedung, function ($query) use ($request) {
+
+                $query->where('gedung', $request->gedung);
+
+            })
+
+
+            // Filter Status
+            ->when($request->status !== null && $request->status !== '', function ($query) use ($request) {
+
+                $query->where('status', $request->status);
+
+            })
+
+
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+
+
+        // Data dropdown filter gedung
+        $gedungs = Room::select('gedung')
+            ->distinct()
+            ->pluck('gedung');
+
+
+
+        return view('rooms.index', compact(
+            'rooms',
+            'search',
+            'gedungs'
+        ));
     }
 
     public function create()
